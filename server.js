@@ -11,3 +11,6 @@ app.get('/', (req, res) => {
 })
 
 console.log("test")
+
+console.log("test2")
+

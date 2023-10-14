@@ -10,7 +10,5 @@ app.get('/', (req, res) => {
     res.send("all linked up")
 })
 
-console.log("test")
 
-console.log("test2")
 

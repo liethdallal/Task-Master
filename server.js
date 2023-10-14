@@ -9,3 +9,5 @@ app.listen(port, (req, res) => {
 app.get('/', (req, res) => {
     res.send("all linked up")
 })
+
+console.log("test")

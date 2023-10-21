@@ -1,27 +1,22 @@
-const express = require("express")
-const ejs = require("ejs")
-const app = express()
+const express = require('express')
+const mongoose = require('./connection')
+const homeRouter = require('./routes/homeroutes')
+
+
+
 const port = 3000
-const bodyParser = require("body-parser")
+const app = express()
 
-app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(express.static("public"));
+app.use(express.static(__dirname + '/views')); // Serve static files from the "views" directory
 
-app.use(express.static(__dirname + '/views'));
-//We are looking in to the entire folder views to be able to grab the css along with our html
 
 app.set("view engine", "ejs")
+//after we grab it we set the view engine to our ejs
 
-app.get('/', (req, res) => {
-    res.render('homepage')
-})
-app.get('/login', (req, res) => {
-    res.render('signin');
-   });
+//middleware
+app.use('/', homeRouter);
 
 app.listen(port, (req, res) => {
-    console.log(`Running on port ${port} ✅ `)
+    console.log('All linked up ')
 })
-
-

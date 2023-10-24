@@ -1,27 +1,40 @@
-// controllers/taskController.js
 const express = require('express');
 const Task = require('../models/taskmodel');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  const tasks = Task.getAll();
-  res.render('homepage', { tasks });
+router.get('/', async (req, res) => {
+  try {
+    const tasks = await Task.find();
+    res.render('homepage', { tasks });
+  } catch (err) {
+    console.error('Error fetching tasks:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
-router.post('/add', (req, res) => {
+router.post('/add', async (req, res) => {
   const { title } = req.body;
-  const newTask = new Task(title);
-  newTask.save();
-  res.redirect('/tasks');
+
+  try {
+    const newTask = new Task({ title });
+    await newTask.save();
+    res.redirect('/tasks');
+  } catch (err) {
+    console.error('Error adding task:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
-router.post('/delete/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
+router.post('/delete/:id', async (req, res) => {
+  const taskId = req.params.id;
 
-  // Delete the task by its ID
-  Task.deleteById(taskId);
-
-  res.redirect('/tasks');
+  try {
+    await Task.findByIdAndRemove(taskId);
+    res.redirect('/tasks');
+  } catch (err) {
+    console.error('Error deleting task:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 module.exports = router;

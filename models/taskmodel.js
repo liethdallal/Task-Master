@@ -1,19 +1,11 @@
-// models/Task.js
-const tasks = [];
+const mongoose = require('mongoose');
 
-class Task {
-  constructor(title) {
-    this.id = tasks.length + 1;
-    this.title = title;
-  }
+// Define the Task schema
+const taskSchema = new mongoose.Schema({
+  title: String
+});
 
-  save() {
-    tasks.push(this);
-  }
-
-  static getAll() {
-    return tasks;
-  }
-}
+// Create the Task model
+const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;

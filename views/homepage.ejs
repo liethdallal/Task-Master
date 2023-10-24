@@ -9,7 +9,12 @@
   <h1>Task List</h1>
   <ul>
     <% tasks.forEach(task => { %>
-      <li><%= task.title %></li>
+      <li>
+        <%= task.title %>
+        <form action="/tasks/delete/<%= task._id %>" method="post">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
     <% }); %>
   </ul>
   <form action="/tasks/add" method="post">

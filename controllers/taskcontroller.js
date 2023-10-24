@@ -15,4 +15,13 @@ router.post('/add', (req, res) => {
   res.redirect('/tasks');
 });
 
+router.post('/delete/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+
+  // Delete the task by its ID
+  Task.deleteById(taskId);
+
+  res.redirect('/tasks');
+});
+
 module.exports = router;

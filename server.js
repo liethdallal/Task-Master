@@ -8,9 +8,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', taskRoutes)
-
-app.use('/tasks', taskRoutes);
+app.use('/tasks', taskRoutes); // Place this before the root route if you want to handle '/tasks' routes first
+app.use('/', taskRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

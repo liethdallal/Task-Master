@@ -25,6 +25,22 @@ router.post('/add', async (req, res) => {
   }
 });
 
+router.put('/users', async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    // Add your task creation logic here
+    const newTask = new Task({ title });
+    await newTask.save();
+
+    // Redirect to the appropriate page (e.g., the task list)
+    res.redirect('/tasks');
+  } catch (error) {
+    console.error('Error adding task:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.post('/delete/:id', async (req, res) => {
   const taskId = req.params.id;
 

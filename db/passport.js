@@ -8,9 +8,10 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK,
-      passReqToCallback: true
+      passReqToCallback: true // Add this line
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (req, accessToken, refreshToken, profile, done) => {
+      // Now, you can access req in this function
       try {
         let user = await User.findOne({ googleId: profile.id })
 
@@ -38,6 +39,7 @@ passport.use(
     }
   )
 )
+
 
 passport.serializeUser(function (user, done) {
   done(null, user.id)

@@ -1,14 +1,27 @@
-const mongoose = require('mongoose')
+const mongoose = require(`../db/connection`)
 
-const userSchema = new mongoose.Schema({
-email: {
-    type: String,
-    required: true
-},
-password: {
-type: String,
-required: true
-}
+const UserSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    tasks: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task'}],
+    googleId: String
+  }, {
+    timestamps: true
+  })
+
+//prehook
+UserSchema.pre('findOne', function(next){
+  this.populate('tasks')
+  next()
 })
 
-module.exports = mongoose.model('User', userSchema)
+UserSchema.pre('find', function(next){
+  this.populate('tasks')
+  next()
+})
+
+const User = mongoose.model('User', UserSchema)
+
+module.exports = User

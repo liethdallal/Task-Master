@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const tasks = await Task.find();
-    res.render('homepage', { tasks });
+    res.render('profile', { tasks });
   } catch (err) {
     console.error('Error fetching tasks:', err);
     res.status(500).send('Internal Server Error');

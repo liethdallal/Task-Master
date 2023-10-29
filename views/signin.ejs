@@ -7,6 +7,22 @@
     <title>Sign-in-Page</title>
 </head>
 <body>
-    <h1>This is the sign in page</h1>
+    
+<h2 id='login'>Login Or Logout</h2>
+<ul class='right'>
+    <li>
+      <% if (user) { %>
+        <div id='logoutlogin'>
+          <a href='/logout'><button>Log Out</button></a>
+        <span id='welcomeuser'>Hi <%= user.name %> </span>
+        </div>
+      <% } else { %>
+        <div id='logindiv'>
+          <a id='loginlink' href='/auth/google'><button id='loginbutton'> Login with Google</button></a>
+        </div>
+
+      <% } %>  
+    </li>
+  </ul>
 </body>
 </html>

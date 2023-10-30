@@ -10,6 +10,8 @@ const bodyParser = require('body-parser')
 const app = express()
 require('./db/passport')
 
+console.log('s');
+
 // Middleware
 app.use(logger('dev')) // Logging middleware before other middlewares
 app.use(express.static(path.join(__dirname, 'public')))

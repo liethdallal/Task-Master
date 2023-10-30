@@ -55,9 +55,6 @@ app.get('/profile', (req, res) => {
   res.render('profile', { tasks: tasks });
 });
 
-app.get('/signin', (req, res) => {
-  res.render('signin.ejs')
-})
 
 
 // Start the server

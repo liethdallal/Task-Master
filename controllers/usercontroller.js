@@ -41,6 +41,7 @@ router.get('/logout', function(req, res){
   req.logout()
   res.redirect('/users')
 })
+
 router.put('/', async (req, res, next) => {
   try {
     if (!req.isAuthenticated()) {

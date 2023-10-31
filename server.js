@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("./db/connection")
+const Task = require('./models/taskmodel')
 const logger = require('morgan')
 const methodOverride = require('method-override')
 const passport = require('passport')
@@ -10,7 +11,7 @@ const bodyParser = require('body-parser')
 const app = express()
 require('./db/passport')
 
-console.log('s');
+
 
 // Middleware
 app.use(logger('dev')) // Logging middleware before other middlewares
@@ -48,13 +49,26 @@ app.use('/', indexRouter)
 // Serve static files - This should be placed before defining your routes.
 app.use(express.static(__dirname + '/views'))
 
-// Define your routes
-app.get('/profile', (req, res) => {
-  // Retrieve tasks from your database or wherever you're getting them
-  const tasks = []// Retrieve your tasks here
+app.get('/profile', async (req, res) => {
+  try {
+    // Retrieve tasks from your database using Mongoose or your data source
+    const tasks = await Task.find().populate('user');
+    if (req.isAuthenticated()) {
+      // Retrieve the authenticated user
+      const user = req.user;
 
-  // Render the 'profile' EJS template and pass the 'tasks' variable
-  res.render('profile', { tasks: tasks });
+      // Add the retrieved tasks to the user's 'tasks' array
+      user.tasks = tasks;
+
+      // Save the user document to persist the changes in the database
+      await user.save();
+    }
+    // Render the 'profile' EJS template and pass the 'tasks' variable
+    res.render('profile', { tasks: tasks });
+  } catch (error) {
+    console.error('Error retrieving tasks:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 

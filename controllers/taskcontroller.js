@@ -1,10 +1,12 @@
 const express = require('express');
 const Task = require('../models/taskmodel');
+const User = require('../models/userModel'); // Import the User model
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const tasks = await Task.find();
+    // Populate the 'user' field to get the associated user for each task
+    const tasks = await Task.find().populate('user');
     res.render('profile', { tasks });
   } catch (err) {
     console.error('Error fetching tasks:', err);
@@ -13,30 +15,16 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/add', async (req, res) => {
-  const { title } = req.body;
+  const { title, userId } = req.body; // Include the user ID when creating a task
 
   try {
-    const newTask = new Task({ title });
+    const newTask = new Task({ title, user: userId });
     await newTask.save();
+
+    // Redirect to the task list page
     res.redirect('/tasks');
   } catch (err) {
     console.error('Error adding task:', err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-router.put('/users', async (req, res) => {
-  const { title } = req.body;
-
-  try {
-    // Add your task creation logic here
-    const newTask = new Task({ title });
-    await newTask.save();
-
-    // Redirect to the appropriate page (e.g., the task list)
-    res.redirect('/tasks');
-  } catch (error) {
-    console.error('Error adding task:', error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -54,3 +42,4 @@ router.post('/delete/:id', async (req, res) => {
 });
 
 module.exports = router;
+

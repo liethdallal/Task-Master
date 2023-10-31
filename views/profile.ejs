@@ -25,18 +25,22 @@
 
   <h1>Task List</h1>
   <ul>
-    <% tasks.forEach(task => { %>
-      <li>
-        <%= task.title %>
-        <form action="/tasks/delete/<%= task._id %>" method="post">
-          <button type="submit">Delete</button>
-        </form>
-      </li>
-    <% }); %>
+    <% if (user) { %>
+      <% user.tasks.forEach(task => { %>
+        <li>
+          <%= task.title %>
+          <form action="/tasks/delete/<%= task._id %>" method="post">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      <% }); %>
+      <form action="/tasks/add" method="post">
+        <input type="text" name="title" placeholder="Add a task">
+        <button type="submit">Add Task</button>
+      </form>
+    <% } else { %>
+      <h1>Please sign in to start adding tasks!</h1>
+    <% } %>
   </ul>
-  <form action="/tasks/add" method="post">
-    <input type="text" name="title" placeholder="Add a task">
-    <button type="submit">Add Task</button>
-  </form>
 </body>
 </html>

@@ -1,11 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require('../db/connection');
 
-// Define the Task schema
 const taskSchema = new mongoose.Schema({
-  title: String
+  title: String,
+  // Reference to the User model
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
-// Create the Task model
 const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;

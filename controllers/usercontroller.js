@@ -2,64 +2,50 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/userModel')
 const passport = require('../db/passport') 
-const Task = require('../models/taskmodel')
 
 function index(req, res, next) {
-  let modelQuery = req.query.name ? {name: new RegExp(req.query.name, 'i')} : {}
-  let sortKey = req.query.sort || 'name'
-  User.find(modelQuery)
-  .sort(sortKey).exec(function(err, users) {
-    if (err) return next(err)
-    res.render('users/index', {
-      users,
-      user: req.user,
-      name: req.query.name,
-      sortKey
-    })
-  })
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const user = req.user; // The authenticated user
+  res.render('users/index', {
+    user: req.user, // Pass the user object to the template
+  });
 }
 
 router.get('/users', index)
 
-// Google OAuth login route
-router.get('/auth/google', passport.authenticate(
-  'google',
-  { scope: ['profile', 'email'] }
-))
-
-// Google OAuth callback route
-router.get('/oauth2callback', passport.authenticate(
-  'google',
-  {
-    successRedirect: '/profile',
-    failureRedirect: '/'
+router.get('/profile', (req, res) => {
+  if (req.isAuthenticated()) {
+    const user = req.user; // Ensure req.user contains the user data
+    res.render('profile', { user });
+  } else {
+    // Handle the case where the user is not authenticated (redirect to login, show an error, etc.)
   }
-))
+});
 
-// OAuth logout route
-router.get('/logout', function(req, res){
-  req.logout()
-  res.redirect('/users')
-})
-
-router.put('/', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: 'Unauthorized' })
+      return res.status(401).json({ error: 'Unauthorized' });
     }
-    const user = await User.findOne({_id: req.user._id})
-    const taskId = req.body.taskId
-    const task = await Task.findOne({ _id: taskId })
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' })
-    }
-    user.tasks.push(task.id)
-    await user.save()
-    res.redirect(`/profile`)
+
+    const user = await User.findOne({ _id: req.user._id });
+    const taskTitle = req.body.title; // Get the task title from the form input
+
+    // Create a new task and add it to the user's tasks array
+    user.tasks.push({ title: taskTitle });
+
+    // Save the updated user with the new task
+    await user.save();
+
+    res.redirect('/profile'); // Redirect back to the profile page
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal Server Error' })
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+});
+
 
 module.exports = router

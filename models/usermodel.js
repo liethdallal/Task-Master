@@ -1,27 +1,18 @@
-const mongoose = require(`../db/connection`)
+const mongoose = require('../db/connection');
+
+const TaskSchema = new mongoose.Schema({
+  title: String,
+});
 
 const UserSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    tasks: [{ 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task'}],
-    googleId: String
-  }, {
-    timestamps: true
-  })
+  name: String,
+  email: String,
+  tasks: [TaskSchema], // Embed tasks directly within the User schema
+  googleId: String,
+}, {
+  timestamps: true,
+});
 
-//prehook
-UserSchema.pre('findOne', function(next){
-  this.populate('tasks')
-  next()
-})
-
-UserSchema.pre('find', function(next){
-  this.populate('tasks')
-  next()
-})
-
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User

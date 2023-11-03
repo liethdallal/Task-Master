@@ -6,13 +6,17 @@ const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const session = require("express-session")
 const path = require("path")
+const ejsLayouts = require('express-ejs-layouts')
+
 const bodyParser = require('body-parser')
 const app = express()
 require('./db/passport')
 
 app.use(logger('dev')) 
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(ejsLayouts)
+
+app.use(express.static(path.join(__dirname, 'views')))
 
 app.use(express.urlencoded({ extended: true }))
 
@@ -54,6 +58,10 @@ app.use('/', indexRouter)
 app.get('/profile', (req,res) => {
   res.render('profile.ejs')
 })
+
+app.use((req, res, next) => {
+  res.status(404).render('error.ejs');
+});
 
 app.listen(3000, () => {
   console.log('Listening!')

@@ -1,47 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task List</title>
-</head>
-<body>
-  <h2 id='login'>Login Or Logout</h2>
-      <% if (user) { %>
-        <div id='logoutlogin'>
-          <a href='/logout'><button>Log Out</button></a>
-        <span id='welcomeuser'>Hi <%= user.name %> </span>
-        </div>
-        <h1>Your Tasks!</h1>
-
-    <% if (user && user.tasks) { %>
-      <% user.tasks.forEach(task => { %>
-        <li><%= task.title %></li>
-        <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST">
-          <input type="hidden" name="_method" value="DELETE">
-          <button type="submit">Delete</button>
-        </form>
-      <% }); %>
-    <% } else { %>
-      <p>No tasks found.</p>
+<h1>Your Tasks!</h1>
+<% if (user && user.tasks.length === 0) { %>
+  <p>You have no tasks!</p>
+<% } %>
+<% if (user) { %>
+  <ul>
+    <% user.tasks.forEach(task => { %>
+      <li><%= task.title %></li>
+      <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit">Delete</button>
+      </form>
+    <% }); %>
+  </ul>
+  <h2>Add a Task</h2>
+  <form action="/profile" method="POST">
+    <input type="text" name="title" placeholder="Task Title" required>
+    <button type="submit">Add Task</button>
+  </form>
+  <% } else { %>
+    <p>Please login to start adding tasks</p>
     <% } %>
-  </ul>
- 
-        <h2>Add a Task</h2>
-        <form action="/profile" method="post">
-          <input type="text" name="title" placeholder="Task Title" required>
-          <button type="submit">Add Task</button>
-        </form>
-        
-      <% } else { %>
-        <div id='logindiv'>
-          <a id='loginlink' href='/auth/google'><button id='loginbutton'> Login with Google</button></a>
-        </div>
+    
 
-      <% } %>  
-    </li>
-  </ul>
+
+
   
-  
-</body>
-</html>

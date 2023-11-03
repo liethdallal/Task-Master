@@ -2,7 +2,6 @@ const router = require('express').Router()
 const passport = require('passport')
 
 
-// The root route renders our only view
 router.get('/', function(req, res) {
   res.redirect('/profile')
 })
@@ -13,7 +12,6 @@ router.get('/auth/google', passport.authenticate(
 ))
 
 
-// Google OAuth callback route
 router.get('/oauth2callback', passport.authenticate(
   'google',
   {
@@ -22,7 +20,6 @@ router.get('/oauth2callback', passport.authenticate(
   }
 ))
 
-// OAuth logout route
 router.get('/logout', function(req, res) {
     req.logout(function(err) {
       if (err) {

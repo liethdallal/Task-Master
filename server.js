@@ -10,22 +10,28 @@ const bodyParser = require('body-parser')
 const app = express()
 require('./db/passport')
 
+app.use(logger('dev')) 
 
-
-// Middleware
-app.use(logger('dev')) // Logging middleware before other middlewares
 app.use(express.static(path.join(__dirname, 'public')))
+
 app.use(express.urlencoded({ extended: true }))
+
 app.use(bodyParser.urlencoded({ extended: false }))
+
 app.use(express.json())
+
 app.use(cookieParser())
+
 app.use(methodOverride('_method'))
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 }))
+
 app.use(passport.initialize())
+
 app.use(passport.session())
 
 app.use(function (req, res, next) {
@@ -33,23 +39,22 @@ app.use(function (req, res, next) {
   next()
 })
 
-
-// Set up your view engine and views directory
 app.set('view engine', 'ejs')
+
 app.set('views', path.join(__dirname, 'views'))
 
-// Routes
 const userRouter = require("./controllers/usercontroller")
+
 const indexRouter = require("./controllers/indexcontroller")
+
 app.use('/profile', userRouter)
+
 app.use('/', indexRouter)
 
 app.get('/profile', (req,res) => {
   res.render('profile.ejs')
 })
-// Start the server
+
 app.listen(3000, () => {
   console.log('Listening!')
 })
-
-//Needs adjusting

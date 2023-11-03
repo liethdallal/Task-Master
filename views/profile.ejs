@@ -7,18 +7,20 @@
 </head>
 <body>
   <h2 id='login'>Login Or Logout</h2>
-<ul class='right'>
-    <li>
       <% if (user) { %>
         <div id='logoutlogin'>
           <a href='/logout'><button>Log Out</button></a>
         <span id='welcomeuser'>Hi <%= user.name %> </span>
         </div>
-        <h1>User's Tasks</h1>
-  <ul>
+        <h1>Your Tasks!</h1>
+
     <% if (user && user.tasks) { %>
       <% user.tasks.forEach(task => { %>
         <li><%= task.title %></li>
+        <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit">Delete</button>
+        </form>
       <% }); %>
     <% } else { %>
       <p>No tasks found.</p>

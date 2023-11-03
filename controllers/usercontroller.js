@@ -8,9 +8,9 @@ function index(req, res, next) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const user = req.user; // The authenticated user
+  const user = req.user; 
   res.render('users/index', {
-    user: req.user, // Pass the user object to the template
+    user: req.user, 
   });
 }
 
@@ -18,10 +18,9 @@ router.get('/users', index)
 
 router.get('/profile', (req, res) => {
   if (req.isAuthenticated()) {
-    const user = req.user; // Ensure req.user contains the user data
+    const user = req.user; 
     res.render('profile', { user });
   } else {
-    // Handle the case where the user is not authenticated (redirect to login, show an error, etc.)
   }
 });
 
@@ -32,15 +31,45 @@ router.post('/', async (req, res, next) => {
     }
 
     const user = await User.findOne({ _id: req.user._id });
-    const taskTitle = req.body.title; // Get the task title from the form input
+    const taskTitle = req.body.title; 
 
-    // Create a new task and add it to the user's tasks array
     user.tasks.push({ title: taskTitle });
 
-    // Save the updated user with the new task
     await user.save();
 
-    res.redirect('/profile'); // Redirect back to the profile page
+    res.redirect('/profile'); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.put('/remove/:taskId', async (req, res) => {
+  try {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const taskId = req.params.taskId;
+    
+    const user = await User.findOne({ _id: req.user._id });
+
+    const taskToRemove = user.tasks.find((task) => task._id.toString() === taskId);
+
+    if (!taskToRemove) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    const taskIndex = user.tasks.indexOf(taskToRemove);
+    if (taskIndex !== -1) {
+      user.tasks.splice(taskIndex, 1);
+    } else {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    await user.save();
+
+    res.redirect('/profile');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -48,4 +77,5 @@ router.post('/', async (req, res, next) => {
 });
 
 
-module.exports = router
+module.exports = router;
+

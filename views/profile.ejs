@@ -3,15 +3,16 @@
   <p id="head">You have no tasks!</p>
 <% } %>
 <% if (user) { %>
-  <ul id="head">
     <% user.tasks.forEach(task => { %>
-      <li><%= task.title %></li>
+      <div class="tasks">
+      <h2><%= task.title %></h2>
       <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST" >
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit">Delete</button>
       </form>
+      </div>
+
     <% }); %>
-  </ul>
   <h2 id="taskhead">Add a Task</h2>
   <form action="/profile" method="POST" >
   <div class='addtask'>

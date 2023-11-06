@@ -1,6 +1,15 @@
 body {
     background-color: aqua;
 }
+button:hover {
+background-color: yellow;
+}
+button{
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 30px;
+    border: none;
+}
 #error{
     text-align: center;
 }
@@ -33,4 +42,17 @@ box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#notloggedin{
+    font-size: 40px;
+    text-align: center;
+}
+#logoutlogin{
+    display: flex;
+    flex-direction: row-reverse;
+}
+#taskbar{
+font-size: 45px;
+text-align: center;
+margin: 0;
 }

@@ -1,33 +1,38 @@
 <h1 id="head">Your Tasks!</h1>
+
 <% if (user && user.tasks.length === 0) { %>
   <p id="head">You have no tasks!</p>
 <% } %>
+
 <% if (user) { %>
-    <% user.tasks.forEach(task => { %>
-      <h2 id="taskbar"><%= task.title %></h2>
-      <div class="tasks">
-      <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST" >
+  <% user.tasks.forEach(task => { %>
+    <h2 id="taskbar"><%= task.title %></h2>
+    <div class="tasks">
+      <form action="/profile/remove/<%= task._id %>?_method=PUT" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit">Delete</button>
       </form>
-      </div>
 
-    <% }); %>
+      <form action="/profile/update/<%= task._id %>" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="checkbox" name="completed" <% if (task.completed) { %>checked<% } %>>
+        <label for="<%= task._id %>">Completed</label>
+      </form>
+    </div>
+  <% }); %>
+
   <h2 id="taskhead">Add a Task</h2>
-  <form action="/profile" method="POST" >
-  <div class='addtask'>
-    <input type="text" name="title" class="form" placeholder="Task Title" required >
-  </div>
-    <br>
-  <div class='addtask'>
-      <button  type="submit">Add Task</button>
-  </div>
+  <form action="/profile" method="POST">
+    <div class='addtask'>
+      <input type="text" name="title" class="form" placeholder="Task Title" required>
+    </div>
+    <div class='addtask'>
+      <button type="submit">Add Task</button>
+    </div>
   </form>
-  <% } else { %>
-    <p id="notloggedin">Please login with google to start adding tasks!</p>
-    <% } %>
-    
 
-
+<% } else { %>
+  <p id="notloggedin">Please login with Google to start adding tasks!</p>
+<% } %>
 
   
